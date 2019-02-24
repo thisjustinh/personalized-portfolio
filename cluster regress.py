@@ -1,8 +1,8 @@
 # import KMeans
-# import keras
+import keras
 import pandas as pd
-# from keras.models import Sequential
-# from keras.layers import Dense, Activation, LSTM
+from keras.models import Sequential
+from keras.layers import Dense, Activation, LSTM, Conv2D,RNN
 from sklearn.cluster import KMeans
 import numpy as np
 
@@ -20,27 +20,42 @@ def cluster(df):
 
     return df
 
-    # model = Sequential()
-    #
-    # model.add(LSTM(32, return_sequences=True, input_shape=(8, 16)))
-    # model.add(LSTM(32, return_sequences=True))
-    # model.add(LSTM(32))
-    #
-    # model.compile(loss='mean_squared_error', optimizer='rmsprop', metrics=['accuracy'])
-
-
-# def get_stocks():
+# model = Sequential()
+#
+# model.add(LSTM(32, return_sequences=True, input_shape=(60, 5)))
+# model.add(LSTM(512, return_sequences=True))
+# model.add(LSTM(64))
+# model.add(Dense(5))
+#
+# model.compile(loss='mean_squared_error', optimizer='rmsprop', metrics=['accuracy'])
+#
+# def get_stocks(df_c, df_h):
 #     bestStocks = []
-#
+#     print(df_c)
 #     for i in range(num_clusters):
+#         my_list = df_c.index[df_c['cluster'] == i].tolist()
+#         tickers = []
+#         for i in my_list:
+#              tickers.append(df_c.loc[i, 'Unnamed: 0'])
+#         #import pdb; pdb.set_trace()
+#         print(tickers)
+#         ##print(df_c.index[list[0]])
+#         x_train = pd.DataFrame()
+#         y_train = pd.DataFrame()
+#         for stock in my_list:
+#             x_train[stock] = df_h
+#             y_train = pd.append(df_h.iloc[stock, :])
 #
-#         list = result.index[result['Cluster'] == i].tolist()
+#         print(x_train)
+#         x_train = np.array(x_train)
+#         x_train = x_train.reshape(1,60,5)
 #
-#         x_train = pd.DataFrame
-#         for stock in list:
-#             x_train.append(historical.loc[stock])
+#         y_train = np.array(y_train)
+#         y_train.reshape(1,60,5)
 #
-#         model.fit(x_train, target, batch_size=60, epochs=5, validation_data=())
+#         print(x_train)
+#         print(y_train)
+#         model.fit(x_train, y_train, batch_size=60, epochs=5, validation_data=())
 #
 #         current = x_train.loc[:, -60:-1]
 #
@@ -50,12 +65,51 @@ def cluster(df):
 #     return bestStocks
 
 
+def recommendations(capital, risk, time, aggressive):
+    kmeans = pd.read_csv('cluster.csv')
+    if capital > 10000:
+        print('nani')
+        n = kmeans.loc[kmeans['P/E'].idxmax(), 'cluster']
+        print(n)
+        my_list = kmeans.index[kmeans['cluster'] == n].tolist()
+        import pdb; pdb.set_trace()
+        tickers = []
+        for i in my_list:
+            tickers.append(kmeans.loc[i, 'Unnamed: 0'])
+        return tickers
+    elif risk > 3:
+        print('nani2')
+        n = kmeans.loc[kmeans['Beta'].idxmax(), 'cluster']
+        my_list = kmeans.index[kmeans['cluster'] == n].tolist()
+        tickers = []
+        for i in my_list:
+            tickers.append(kmeans.loc[i, 'Unnamed: 0'])
+        return tickers
+    elif time > 5:
+        print('nani3')
+        n = kmeans.loc[kmeans['Div Yield'].idxmax(), 'cluster']
+        my_list = kmeans.index[kmeans['cluster'] == n].tolist()
+        tickers = []
+        for i in my_list:
+            tickers.append(kmeans.loc[i, 'Unnamed: 0'])
+        return tickers
+    elif aggressive > 3:
+        n = kmeans.loc[kmeans['Div Yield'].idxmax(), 'cluster']
+        print(n)
+        my_list = kmeans.index[kmeans['cluster'] == n].tolist()
+        tickers = []
+        for i in my_list:
+            tickers.append(kmeans.loc[i, 'Unnamed: 0'])
+        return tickers
+    else:
+        print('nani5')
+        n = kmeans.loc[kmeans['EPS'].idxmax(), 'cluster']
+        my_list = kmeans.index[kmeans['cluster'] == n].tolist()
+        tickers = []
+        for i in my_list:
+            tickers.append(kmeans.loc[i, 'Unnamed: 0'])
+        return tickers
+
+
 if __name__ == '__main__':
-    df = pd.DataFrame.from_csv('data.csv')
-
-    cluster(df)
-
-
-
-
-
+    print(recommendations(2000, 4, 2, 4))
