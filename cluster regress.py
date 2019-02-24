@@ -1,8 +1,8 @@
 # import KMeans
-import keras
+# import keras
 import pandas as pd
-from keras.models import Sequential
-from keras.layers import Dense, Activation, LSTM, Conv2D,RNN
+# from keras.models import Sequential
+# from keras.layers import Dense, Activation, LSTM, Conv2D,RNN
 from sklearn.cluster import KMeans
 import numpy as np
 
@@ -67,31 +67,35 @@ def cluster(df):
 
 def recommendations(capital, risk, time, aggressive):
     kmeans = pd.read_csv('cluster.csv')
+    hist = pd.read_csv('historical.csv')
     if capital > 10000:
-        print('nani')
         n = kmeans.loc[kmeans['P/E'].idxmax(), 'cluster']
         print(n)
         my_list = kmeans.index[kmeans['cluster'] == n].tolist()
         import pdb; pdb.set_trace()
         tickers = []
         for i in my_list:
-            tickers.append(kmeans.loc[i, 'Unnamed: 0'])
+            t = kmeans.loc[i, 'Unnamed: 0']
+            tickers.append({'symbol': t,
+                            'price': hist[t].iloc[-1]})
         return tickers
     elif risk > 3:
-        print('nani2')
         n = kmeans.loc[kmeans['Beta'].idxmax(), 'cluster']
         my_list = kmeans.index[kmeans['cluster'] == n].tolist()
         tickers = []
         for i in my_list:
-            tickers.append(kmeans.loc[i, 'Unnamed: 0'])
+            t = kmeans.loc[i, 'Unnamed: 0']
+            tickers.append({'symbol': t,
+                            'price': hist[t].iloc[-1]})
         return tickers
     elif time > 5:
-        print('nani3')
         n = kmeans.loc[kmeans['Div Yield'].idxmax(), 'cluster']
         my_list = kmeans.index[kmeans['cluster'] == n].tolist()
         tickers = []
         for i in my_list:
-            tickers.append(kmeans.loc[i, 'Unnamed: 0'])
+            t = kmeans.loc[i, 'Unnamed: 0']
+            tickers.append({'symbol': t,
+                            'price': hist[t].iloc[-1]})
         return tickers
     elif aggressive > 3:
         n = kmeans.loc[kmeans['Div Yield'].idxmax(), 'cluster']
@@ -99,15 +103,18 @@ def recommendations(capital, risk, time, aggressive):
         my_list = kmeans.index[kmeans['cluster'] == n].tolist()
         tickers = []
         for i in my_list:
-            tickers.append(kmeans.loc[i, 'Unnamed: 0'])
+            t = kmeans.loc[i, 'Unnamed: 0']
+            tickers.append({'symbol': t,
+                            'price': hist[t].iloc[-1]})
         return tickers
     else:
-        print('nani5')
         n = kmeans.loc[kmeans['EPS'].idxmax(), 'cluster']
         my_list = kmeans.index[kmeans['cluster'] == n].tolist()
         tickers = []
         for i in my_list:
-            tickers.append(kmeans.loc[i, 'Unnamed: 0'])
+            t = kmeans.loc[i, 'Unnamed: 0']
+            tickers.append({'symbol': t,
+                            'price': hist[t].iloc[-1]})
         return tickers
 
 
