@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <link rel="stylesheet" href="/static/styles.css">
+        <link href="https://fonts.googleapis.com/css?family=Work+Sans" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <style>
+            body {
+
+            }
+            #left_layout {
+                left: 10%;
+            }
+            #right_layout {
+                right: 10%;
+                box-shadow: inset 0px 0px 10px #bfbfbf;
+            }
+            #inner_layout {
+                padding-left: 20%;
+                padding-right: 20%;
+                text-align: left;
+            }
+        </style>
+
+        <script>
+            function submit() {
+                var risk = $("#risk").val();
+                var amount = $("#amount").val();
+                var time = $("#time").val();
+                window.location.href = 'results?risk=' + risk + '&amount=' + amount + '&time=' + time;
+            }
+        </script>
+    </head>
+    <body>
+        <div id="left_layout" class="main_layout">
+            <div class="shrink_wrap">
+                <img src="/static/capitalist.png" style="width: 100%" alt="CapitaList">
+                <h2>Buying stocks, made easy.</h2>
+            </div>
+        </div>
+
+        <div id="right_layout" class="main_layout">
+            <div class="shadow_mask">
+                <div id="inner_layout" class="shrink_wrap">
+                    <h2>Let's get started</h2>
+
+                    <h3>What kind of stocks are you looking for?</h3>
+                    <div class="text1">Risk level</div>
+                    <input id="risk" class="slider" type="range" min="1" max="5" value="3">
+                    <div style="height: 50px;">
+                        <div class="slider_left">
+                            <div>Less risk</div>
+                            <div>Less return</div>
+                        </div>
+
+                        <div class="slider_right">
+                            <div>More risk</div>
+                            <div>More return</div>
+                        </div>
+                    </div>
+                    <div class="line_break"></div>
+
+                    <h3>How much money are you planning on investing?</h3>
+                    <input style="width: 100px;" id="amount" class="input" type="text">
+                    <span> dollars</span>
+                    <div class="line_break"></div>
+
+                    <h3>How long do you want to invest?</h3>
+                    <input style="width: 75px;" id="time" class="input" type="text">
+                    <span> years</span>
+                    <div class="line_break"></div>
+
+                    <div class="button" onclick="submit()">Find stocks</div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

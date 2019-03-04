@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <link rel="stylesheet" href="/static/styles.css">
+        <link href="https://fonts.googleapis.com/css?family=Work+Sans" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <style>
+            body {
+                text-align: center;
+            }
+            #parent_layout {
+                left: 10%;
+                width: 80%;
+                box-shadow: inset 0px 0px 10px #bfbfbf;
+            }
+            #layout1 {
+                left: 10%;
+                width: 80%;
+            }
+            #suggestions_menu {
+                width: 100%;
+                padding-top: 40%;
+                position: relative;
+            }
+            .suggestion_tile {
+                text-align: left;
+                opacity: 0;
+                padding-top: 20px;
+                padding-left: 20px;
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                width: 8%;
+                height: 20%;
+                box-shadow: 0px 0px 10px #bfbfbf;
+                box-sizing: border-box;
+            }
+            .suggestion_tile:before {
+                content: "";
+                position: absolute;
+                right: 0px;
+                top: 0px;
+                width: 10%;
+                height: 100%;
+                background-color: #ffbf00;
+            }
+            .suggestion_entry:hover {
+                box-shadow: 0px 0px 10px #bfbfbf;
+                cursor: pointer;
+            }
+            .menu {
+                padding-left: 0%;
+                padding-right: 0%;
+                text-align: left;
+                box-sizing: border-box;
+            }
+        </style>
+
+        <script>
+            var loaded = 0;
+            var tileX = 0;
+            var tileY = 0;
+            var stocks = [];
+
+            function showTiles() {
+                if (loaded < 10) {
+                    $("#suggestions_menu").append("<div id=\"tile" + loaded + "\" class=\"suggestion_tile\" style=\"left: " + (6 + 20 * tileX) + "%; top: " + (17.5 + 50 * tileY) + "%;\"></div>");
+                    $("#tile" + loaded).append("<h3>" + (loaded + 1) + ". " + stocks[loaded].symbol + "</h3>");
+                    $("#tile" + loaded).append("<p> $" + stocks[loaded].price + "</p>");
+
+                    var tileX0 = tileX;
+                    var tileY0 = tileY;
+                    tileX++;
+                    if (tileX >= 5) {
+                        tileX = 0;
+                        tileY++;
+                    }
+                    loaded++;
+                    $("#tile" + (loaded - 1)).animate({opacity: "1", left: (2 + 20 * tileX0) + "%", top: (5 + 50 * tileY0) + "%", width: "16%", height: "40%"}, 100, "swing", function() { showTiles() });
+                }
+            }
+
+            function getResults() {
+                var args = location.href.substring(location.href.indexOf("?")+1).split('&');
+                var risk = args[0].split('=')[1];
+                var amount = args[1].split('=')[1];
+                var time = args[2].split('=')[1];
+
+                var toSend = {"risk": risk, "amount": amount, "time": time};
+
+                const url = "http://127.0.0.1:8000/collect_user_data";
+                $.post(url, JSON.stringify(toSend), function(data, status) {
+                    stocks = data;
+                    showTiles();
+                });
+            }
+
+            $(document).ready(function() {
+                getResults();
+            });
+        </script>
+    </head>
+    <body>
+        <img src="/static/capitalist.png" style="margin-top: 0px; width: 180px;" alt="CapitaList">
+        <div id="parent_layout" class="main_layout">
+            <div class="shadow_mask">
+                <div id="layout1" class="main_layout">
+                    <div class="menu shrink_wrap">
+                        <h2>Top suggestions</h2>
+
+                        <div id="suggestions_menu">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
